@@ -1,0 +1,26 @@
+services:
+  weather-app:
+    container_name: weather-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    entrypoint: [ "./docker/startup.sh" ]
+    volumes:
+      - .:/app
+      - ./docker/crontab:/etc/crontab
+      - ./docker/startup.sh:/usr/local/bin/startup.sh
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/php.ini:/usr/local/etc/php/php.ini
+    ports:
+      - "80:80"
+    expose:
+      - "80"
+    environment:
+      ENVIRONMENT: development
+    networks:
+      - weatherapp_net
+networks:
+  weatherapp_net:
+    name: weatherapp_net
+    driver: "bridge"
